@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<vmod>
+    <name>Disposable Email Blocker</name>
+    <version><![CDATA[1.0.0]]></version>
+    <description>Blocks users from registering with disposable email addresses.</description>
+    <author><![CDATA[Tomba Email Finder]]></author>
+    <setting>
+        <title>Disposable Error Message</title>
+        <description>This message displays on the input if the email is Disposable.</description>
+        <key>de_blocker_disposable_input</key>
+        <default_value>Abuses, strongly encourage you to stop using disposable email-</default_value>
+        <function>text()</function>
+    </setting>
+    <setting>
+        <title>Webmail Error Message</title>
+        <description>This message displays on the input if the email is Webmail.</description>
+        <key>de_blocker_webmail_input</key>
+        <default_value>Abuses, strongly encourage you to stop using disposable email-</default_value>
+        <function>text()</function>
+    </setting>
+    <file name="includes/templates/*.catalog/layouts/{default,checkout,blank}.inc.php">
+
+        <operation method="before" type="multiline" onerror="warning">
+            <find><![CDATA[</body>]]></find>
+
+            <insert><![CDATA[
+<script src="https://cdn.jsdelivr.net/npm/disposable-email-blocker/disposable-email-blocker.min.js"></script>
+<script>
+const defaults = {
+    disposable: {
+        message: '{setting:de_blocker_disposable_input}',
+    },
+    webmail: {
+        message: '{setting:de_blocker_webmail_input}',
+    }
+};
+new Disposable.Blocker(defaults);
+</script>
+      ]]>            </insert>
+        </operation>
+    </file>
+</vmod>
